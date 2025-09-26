@@ -2,8 +2,8 @@ import { db } from "@/drizzle/db"
 import { inngest } from "../client"
 import { eq } from "drizzle-orm"
 import { UserResumeTable } from "@/drizzle/schema"
-import { env } from "@/data/env/server"
 import { updateUserResume } from "@/features/users/db/userResumes"
+import { summarizeResume } from "@/services/mastra/resumeAgent"
 
 export const createAiSummaryOfUploadedResume = inngest.createFunction(
   {
@@ -25,39 +25,12 @@ export const createAiSummaryOfUploadedResume = inngest.createFunction(
 
     if (userResume == null) return
 
-    const result = await step.ai.infer("create-ai-summary", {
-      model: step.ai.models.anthropic({
-        model: "claude-3-5-sonnet-latest",
-        defaultParameters: { max_tokens: 2048 },
-        apiKey: env.ANTHROPIC_API_KEY,
-      }),
-      body: {
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "document",
-                source: {
-                  type: "url",
-                  url: userResume.resumeFileUrl,
-                },
-              },
-              {
-                type: "text",
-                text: "Summarize the following resume and extract all key skills, experience, and qualifications. The summary should include all the information that a hiring manager would need to know about the candidate in order to determine if they are a good fit for a job. This summary should be formatted as markdown. Do not return any other text. If the file does not look like a resume return the text 'N/A'.",
-              },
-            ],
-          },
-        ],
-      },
+    const aiSummary = await step.run("create-ai-summary", async () => {
+      return await summarizeResume(userResume.resumeFileUrl)
     })
 
     await step.run("save-ai-summary", async () => {
-      const message = result.content[0]
-      if (message.type !== "text") return
-
-      await updateUserResume(userId, { aiSummary: message.text })
+      await updateUserResume(userId, { aiSummary })
     })
   }
 )
