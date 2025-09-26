@@ -6,7 +6,7 @@ import {
   JobListingTable,
   UserResumeTable,
 } from "@/drizzle/schema"
-import { applicantRankingAgent } from "../ai/applicantRankingAgent"
+import { rankApplicant } from "@/services/mastra/applicantRankingAgent"
 
 export const rankApplication = inngest.createFunction(
   { id: "rank-applicant", name: "Rank Applicant" },
@@ -61,8 +61,14 @@ export const rankApplication = inngest.createFunction(
 
     if (resumeSummary == null || jobListing == null) return
 
-    await applicantRankingAgent.run(
-      JSON.stringify({ coverLetter, resumeSummary, jobListingId, userId })
-    )
+    await step.run("rank-applicant", async () => {
+      await rankApplicant({
+        userId,
+        jobListingId,
+        resumeSummary,
+        coverLetter,
+        jobListing,
+      })
+    })
   }
 )
