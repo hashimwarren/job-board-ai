@@ -17,8 +17,7 @@
   "dependencies": {
     "@clerk/nextjs": "^6.21.0",
     "@clerk/themes": "^2.2.49",
-    "@hookform/resolvers": "^5.0.1",
-    "@inngest/agent-kit": "^0.8.0",
+  "@hookform/resolvers": "^5.0.1",
     "@mdxeditor/editor": "^3.35.0",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-avatar": "^1.1.10",
@@ -42,7 +41,7 @@
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.44.2",
     "inngest": "^3.38.0",
-    "lucide-react": "^0.513.0",
+  "lucide-react": "^0.513.0",
     "next": "15.4.0-canary.67",
     "next-mdx-remote": "^5.0.0",
     "next-themes": "^0.4.6",
