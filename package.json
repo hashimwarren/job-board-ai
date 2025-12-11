@@ -19,7 +19,7 @@
     "@clerk/themes": "^2.2.49",
     "@hookform/resolvers": "^5.0.1",
     "@inngest/agent-kit": "^0.8.0",
-    "@mdxeditor/editor": "^3.35.0",
+    "@mdxeditor/editor": "^3.49.2",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-collapsible": "^1.1.11",
